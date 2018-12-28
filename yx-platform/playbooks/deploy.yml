@@ -1,0 +1,10 @@
+- hosts: yx-platform
+  gather_facts: true
+  remote_user: root
+  vars:
+      backup_to: "{{root}}_{{branch}}_{{ansible_date_time.epoch}}"
+      pwd: /root/.jenkins/workspace/yx-platform
+      fileName: yx-platform-0.0.1-SNAPSHOT.jar
+  roles:
+    - yx-platform
+

@@ -1,1 +1,6 @@
-"# yxmall_deploy" 
+
+# 一笑商城jenkins部署脚本仓库目录
+
+一级目录为项目名
+JenkinsFile为jenkins所需pipeline文件
+playbooks 为ansible部署脚本

@@ -39,6 +39,15 @@ pipeline {
             }
         }
 		
+ 		stage('Pull deploy ansible script') {
+            steps {
+				sh 'git config --global http.sslVerify false'
+				dir ("${env.WORKSPACE}"){
+					git branch: 'master', credentialsId: 'aa68fb38-c7ac-46f1-baa9-2c2f687e864c', url: 'https://github.com/YxMall/yxmall_deploy.git'
+				}
+            }
+        }
+
 		stage('ansible deploy service') {
             steps {
                 sh 'ansible --version'

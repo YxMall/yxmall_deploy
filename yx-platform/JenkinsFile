@@ -27,7 +27,7 @@ pipeline {
             steps {
 				sh 'git config --global http.sslVerify false'
 				dir ("${env.WORKSPACE}"){
-					git branch: 'master', credentialsId: 'aa68fb38-c7ac-46f1-baa9-2c2f687e864c', url: 'https://github.com/YxMall/yx-platform.git'
+					git branch: '$branch', credentialsId: 'aa68fb38-c7ac-46f1-baa9-2c2f687e864c', url: 'https://github.com/YxMall/yx-platform.git'
 				}
             }
         }
@@ -42,7 +42,7 @@ pipeline {
  		stage('Pull deploy ansible script') {
             steps {
 				sh 'git config --global http.sslVerify false'
-				dir ("${env.WORKSPACE}"){
+				dir (path:"../yxmall_deploy"){
 					git branch: 'master', credentialsId: 'aa68fb38-c7ac-46f1-baa9-2c2f687e864c', url: 'https://github.com/YxMall/yxmall_deploy.git'
 				}
             }
@@ -50,9 +50,11 @@ pipeline {
 
 		stage('ansible deploy service') {
             steps {
-                sh 'ansible --version'
-				sh 'ansible-playbook -i /qing/yx-platform_playbooks/inventory/prod /qing/yx-platform_playbooks/deploy.yml -e fileName=$fileName'
-            }
+				dir (path:"../yxmall_deploy/yx-platform/playbooks"){
+					 sh 'ansible --version'
+				     sh 'ansible-playbook -i   inventory/$deploy_env ./deploy.yml  -e fileName=$fileName'
+				}   
+			  }
         }
     }
 }

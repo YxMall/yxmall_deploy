@@ -1,0 +1,58 @@
+pipeline {
+	// 所有机器
+    agent any
+
+	environment {
+		PATH="/usr/local/bin:/bin:/sbin:/usr/bin:/usr/sbin"
+	}
+
+	parameters {
+		choice(
+			choices: 'dev\nprod',
+			description: '请选择你要部署的环境',
+			name: 'deploy_env'
+		)
+		string (name: 'branch', defaultValue: 'master', description: '需要部署的分支名称')
+	}
+
+	
+    stages {
+        stage('Pull deploy code') {
+            steps {
+				sh 'git config --global http.sslVerify false'
+				dir ("${env.WORKSPACE}"){
+					git branch: '$branch', credentialsId: 'aa68fb38-c7ac-46f1-baa9-2c2f687e864c', url: 'https://github.com/YxMall/yx-platform_front.git'
+				}
+            }
+        }
+
+		stage('build deploy code') {
+            steps {
+				dir ("${env.WORKSPACE}"){
+					sh 'node -v'
+					sh 'npm -v'
+					sh 'npm i'
+					sh 'npm run build'
+				}
+            }
+        }
+		
+ 		stage('Pull deploy ansible script') {
+            steps {
+				sh 'git config --global http.sslVerify false'
+				dir (path:"../yxmall_deploy"){
+					git branch: 'master', credentialsId: 'aa68fb38-c7ac-46f1-baa9-2c2f687e864c', url: 'https://github.com/YxMall/yxmall_deploy.git'
+				}
+            }
+        }
+
+		stage('ansible deploy service') {
+            steps {
+				dir (path:"../yxmall_deploy/${JOB_NAME}/playbooks"){
+					 sh 'ansible --version'
+				     sh 'ansible-playbook -i   inventory/$deploy_env ./deploy.yml  -e pwd=${WORKSPACE}'
+				}   
+			  }
+        }
+    }
+}

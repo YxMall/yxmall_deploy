@@ -2,7 +2,7 @@
   gather_facts: true
   remote_user: root
   vars:
-      pwd: /root/.jenkins/workspace/yx-platform
+      pwd: /root/.jenkins/workspace/yx-platform_front
   roles:
-    - yx-platform
+    - yx-platform_front
 

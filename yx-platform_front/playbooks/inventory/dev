@@ -1,5 +1,5 @@
-[wordpress]
+[yx-platform]
 test.example.com
 
-[wordpress:vars]
+[yx-platform:vars]
 server_name=test.example.com

@@ -1,8 +1,11 @@
 - name: Remove old html
   shell: 'rm -rf /usr/share/nginx/html/admin'
 
+- name: Print html path
+  shell: 'echo {{pwd}}'
+
 - name: Copy html to remote
-  copy: 'remote_src=no src={{ pwd }}/dist  dest=/usr/share/nginx/html/admin/ mode=0755'
+  copy: 'remote_src=no src={{ pwd }}/dist/  dest=/usr/share/nginx/html/admin/ mode=0755'
 
 - name: Restart nginx service
   service: name=nginx state=restarted
